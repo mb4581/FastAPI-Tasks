@@ -5,12 +5,12 @@ import fastapi
 from that_depends.providers import DIContextMiddleware
 
 from app import exceptions, ioc
-from app.api.decks import ROUTER
 from app.exceptions import DatabaseValidationError
 
 
 def include_routers(app: fastapi.FastAPI) -> None:
-    app.include_router(ROUTER, prefix="/api")
+    # app.include_router(ROUTER, prefix="/api")
+    pass
 
 
 class AppBuilder:
