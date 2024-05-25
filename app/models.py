@@ -1,8 +1,11 @@
 import logging
 import typing
+from datetime import datetime
 
 import sqlalchemy as sa
 from sqlalchemy import orm
+
+from app.helpers.datetime import generate_utc_dt
 
 logger = logging.getLogger(__name__)
 
@@ -37,6 +40,8 @@ class TaskList(BaseModel):
 
 class Task(BaseModel):
     __tablename__ = "task"
+
+    list_id: orm.Mapped[int] = orm.mapped_column(sa.Integer, sa.ForeignKey("task_list.id"))
 
     title: orm.Mapped[str] = orm.mapped_column(sa.String, nullable=False)
     completed: orm.Mapped[bool] = orm.mapped_column(sa.Boolean, nullable=False)
