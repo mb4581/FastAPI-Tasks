@@ -41,7 +41,7 @@ async def register(response: fastapi.Response, data: schemas.UserLoginBody):
     await session.commit()
 
     # Ставим куку чтоб пользователь стал авторизован
-    response.set_cookie("email", data.email)
+    response.set_cookie("email", data.email, samesite="none")
 
     return True
 
@@ -59,6 +59,6 @@ async def log_in(response: fastapi.Response, data: schemas.UserLoginBody):
         raise HTTPException(status_code=400, detail="Invalid credentials")
 
     # Ставим куку чтоб пользователь стал авторизован
-    response.set_cookie("email", data.email)
+    response.set_cookie("email", data.email, samesite="none")
 
     return True

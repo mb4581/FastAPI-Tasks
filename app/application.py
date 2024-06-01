@@ -2,6 +2,7 @@ import contextlib
 import typing
 
 import fastapi
+from fastapi.middleware.cors import CORSMiddleware
 from that_depends.providers import DIContextMiddleware
 
 from app import exceptions, ioc
@@ -11,6 +12,16 @@ from app.api.tasks import router as tasks_router
 
 
 def include_routers(app: fastapi.FastAPI) -> None:
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=[
+            "http://localhost:5173"
+        ],
+        allow_credentials=True,
+        allow_methods=["*"],
+        allow_headers=["*"],
+    )
+
     app.include_router(user_router, prefix="/user")
     app.include_router(tasks_router, prefix="/tasks")
 

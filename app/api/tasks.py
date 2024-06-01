@@ -50,7 +50,7 @@ async def create_list(request: fastapi.Request, data: schemas.ListCreateModel):
     return typing.cast(schemas.TaskListBody, list_entry)
 
 
-@router.get("/<list_id>", description="Read task list", tags=["task_list"])
+@router.get("/{list_id}", description="Read task list", tags=["task_list"])
 async def get_list_items(request: fastapi.Request, list_id: int) -> schemas.TaskListBody:
     session = await IOCContainer.session()
     t_list = await find_list(request, session, list_id)
@@ -66,7 +66,7 @@ async def get_list_items(request: fastapi.Request, list_id: int) -> schemas.Task
     })
 
 
-@router.put("/<list_id>", description="Put new task to list", tags=["task"])
+@router.put("/{list_id}", description="Put new task to list", tags=["task"])
 async def add_task(request: fastapi.Request, data: schemas.NewTask, list_id: int):
     session = await IOCContainer.session()
 
@@ -81,7 +81,7 @@ async def add_task(request: fastapi.Request, data: schemas.NewTask, list_id: int
     return entry
 
 
-@router.delete("/<list_id>", status_code=201, tags=["task_list"])
+@router.delete("/{list_id}", status_code=201, tags=["task_list"])
 async def delete_list(request: fastapi.Request, list_id: int, task_id: int):
     session = await IOCContainer.session()
 
@@ -93,7 +93,7 @@ async def delete_list(request: fastapi.Request, list_id: int, task_id: int):
     return True
 
 
-@router.post("/<list_id>/<task_id>", description="Mark task as completed", status_code=201, tags=["task"])
+@router.post("/{list_id}/{task_id}", description="Mark task as completed", status_code=201, tags=["task"])
 async def complete_task(request: fastapi.Request, list_id: int, task_id: int):
     session = await IOCContainer.session()
 
@@ -110,7 +110,7 @@ async def complete_task(request: fastapi.Request, list_id: int, task_id: int):
         raise HTTPException(status_code=404, detail="Task not found")
 
 
-@router.delete("/<list_id>/<task_id>", status_code=201, tags=["task"])
+@router.delete("/{list_id}/{task_id}", status_code=201, tags=["task"])
 async def delete_task(request: fastapi.Request, list_id: int, task_id: int):
     session = await IOCContainer.session()
 
