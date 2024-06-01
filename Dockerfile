@@ -1,29 +1,26 @@
-ARG ENVIRONMENT="prod"
-FROM python:3.11-slim
+FROM python:3.11.6-alpine3.18
 
-# required for psycopg2
-RUN apt update \
-    && apt install -y --no-install-recommends \
-        build-essential \
-        libpq-dev \
-    && apt clean \
-    && rm -rf /var/lib/apt/lists/*
+ARG runtime_deps="curl postgresql-client"
+ARG build_deps="postgresql-dev build-base"
 
-RUN pip install --no-cache-dir --upgrade pip poetry
-RUN useradd --no-create-home --gid root runner
+RUN apk add --no-cache ${runtime_deps} ${build_deps} \
+ && pip install psycopg2==2.9.9 poetry \
+ && apk del --no-cache ${build_deps}
 
 ENV POETRY_VIRTUALENVS_CREATE=false
 
 WORKDIR /code
+CMD ["sh", "/code/docker-entrypoint.sh"]
 
 COPY pyproject.toml .
 COPY poetry.lock .
 
-RUN [ "$ENVIRONMENT" = "prod" ] && poetry install --no-dev || poetry install
+RUN poetry install --no-dev
 
 COPY . .
 
-RUN chown -R runner:root /code && chmod -R g=u /code
-CMD ["bash", "/code/docker-entrypoint.sh"]
+RUN adduser -D runner \
+ && chown -R runner:root /code \
+ && chmod -R g=u /code
 
 USER runner
