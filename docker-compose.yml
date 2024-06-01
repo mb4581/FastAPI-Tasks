@@ -18,8 +18,14 @@ services:
     environment:
       - DEBUG=true
       - DB_ECHO=true
-    command:
-      ["python", "-m", "app"]
+
+  ui:
+    build: ./frontend
+    restart: always
+    volumes:
+      - .:/code
+    ports:
+      - "80:80"
 
   db:
     image: postgres:16

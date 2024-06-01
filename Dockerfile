@@ -1,5 +1,5 @@
 ARG ENVIRONMENT="prod"
-FROM python:3.12-slim
+FROM python:3.11-slim
 
 # required for psycopg2
 RUN apt update \
@@ -24,5 +24,6 @@ RUN [ "$ENVIRONMENT" = "prod" ] && poetry install --no-dev || poetry install
 COPY . .
 
 RUN chown -R runner:root /code && chmod -R g=u /code
+CMD ["bash", "/code/docker-entrypoint.sh"]
 
 USER runner
